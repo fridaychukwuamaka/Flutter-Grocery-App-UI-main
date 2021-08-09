@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/screens/register.dart';
 import 'package:grocery_app/services/db.dart';
@@ -23,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   String emailError;
   String passwordError;
 
-  login() async {
+  Future<dynamic> login() async {
     UserCredential signIn = await auth
         .signInWithEmailAndPassword(
       email: _emailController.text,
@@ -37,8 +38,9 @@ class _LoginPageState extends State<LoginPage> {
       return;
     });
 
+    GetStorage().write('auth-token', await signIn.user.getIdToken());
+
     if (signIn != null) {
-      User user = signIn.user;
       Navigator.push(
         context,
         MaterialPageRoute(

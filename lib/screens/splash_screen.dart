@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:grocery_app/screens/dashboard/dashboard_screen.dart';
 import 'package:grocery_app/screens/welcome_screen.dart';
 import 'package:grocery_app/services/db.dart';
@@ -22,12 +23,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void onTimerFinished() {
+    print(GetStorage().read('auth-token'));
     Navigator.of(context).pushReplacement(new MaterialPageRoute(
       builder: (BuildContext context) {
-        if (auth.currentUser != null) {
-          DashboardScreen();
-        } else {}
-        return WelcomeScreen();
+        if (GetStorage().hasData('auth-token')) {
+          return DashboardScreen();
+        } else {
+          return WelcomeScreen();
+        }
       },
     ));
   }

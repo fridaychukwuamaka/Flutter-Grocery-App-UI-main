@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/screens/dashboard/dashboard_screen.dart';
 import 'package:grocery_app/services/db.dart';
@@ -20,7 +21,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  bool _loading = false;
 
   singUp() async {
     User user;
@@ -50,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "address": _addressController.text,
           "fullname": _fullnameController.text,
         });
+        GetStorage().write('auth-token', await user.getIdToken());
 
         Navigator.push(
           context,
@@ -223,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ],
             ),
-              SizedBox(
+            SizedBox(
               height: 50,
             ),
           ],
