@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/helpers/column_with_seprator.dart';
 import 'package:grocery_app/screens/account/info_details.dart';
@@ -32,8 +33,6 @@ class _AccountScreenState extends State<AccountScreen> {
   getUserInfo() async {
     DocumentSnapshot<Map<String, dynamic>> userInfo =
         await db.collection('users').doc(auth.currentUser.uid).get();
-
-   
 
     setState(() {
       userName = userInfo.get('fullname');
@@ -128,6 +127,8 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         onPressed: () async {
           await auth.signOut();
+
+          await GetStorage().remove('auth-token');
 
           Navigator.push(
               context,

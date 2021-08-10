@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/models/grocery_item.dart';
 import 'package:grocery_app/services/db.dart';
@@ -73,7 +72,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 if (cart.isNotEmpty) {
                                   amount = cart.single['numItem'];
                                 }
-                                
+
                                 return ItemCounterWidget(
                                   stock: amount,
                                   productId: widget.productId,
@@ -96,7 +95,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             }),
                         Spacer(),
                         Text(
-                          "\$${getTotalPrice().toStringAsFixed(2)}",
+                          "₦${getTotalPrice().toStringAsFixed(2)}",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -116,20 +115,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       customWidget: ratingWidget(),
                     ),
                     Spacer(),
-                    AppButton(
+                   /*  AppButton(
                       label: "Add To Cart",
                       onPressed: () async {
                         var addedCart =
                             await StoreDb().addToCart(widget.productId, amount);
                         if (addedCart) {
-                      /*     Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('Added to cart')));
-                       */  } else {
+                          Get.snackbar(
+                            'Message',
+                            'Added to cart',
+                            margin: EdgeInsets.zero,
+                            colorText: Colors.white,
+                            borderRadius: 0,
+                            backgroundColor: AppColors.primaryColor
+                          );
+                        } else {
                           print('object');
                         }
                       },
                     ),
-                    Spacer(),
+                     */Spacer(),
                   ],
                 ),
               ),

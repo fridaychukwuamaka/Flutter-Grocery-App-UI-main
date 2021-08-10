@@ -150,6 +150,7 @@ class _ItemCounterWidgetState extends State<ItemCounterWidget> {
     db.collection('carts').doc(auth.currentUser.uid).update(
       {'products': products},
     );
+    
   }
 
   void updateParent() {

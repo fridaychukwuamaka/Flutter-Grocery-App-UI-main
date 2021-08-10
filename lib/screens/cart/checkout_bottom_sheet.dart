@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutterwave/flutterwave.dart';
 import 'package:flutterwave/models/responses/charge_response.dart';
+import 'package:get/get.dart';
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/models/sales.dart';
+import 'package:grocery_app/screens/cart/cart_screen.dart';
 import 'package:grocery_app/screens/order_accepted_screen.dart';
 import 'package:grocery_app/services/db.dart';
 
@@ -75,7 +77,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
           getDivider(),
           // checkoutRow("Promo Code", trailingText: "Pick Discount"),
           // getDivider(),
-          checkoutRow("Total Cost", trailingText: "\$${widget.total}"),
+          checkoutRow("Total Cost", trailingText: "₦${widget.total}"),
           getDivider(),
           SizedBox(
             height: 30,
@@ -168,7 +170,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   }
 
   Future<void> onPlaceOrderClicked(double total, products, context) async {
-     await beginPayment(total, _getReference());
+    await beginPayment(total, _getReference());
 
     Sales orders = Sales(
       product: products,
@@ -215,6 +217,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
     );
 
     final ChargeResponse response = await flutterwave.initializeForUiPayments();
+  /*   Get.to(CartScreen()); */
   }
 
   String _getReference() {

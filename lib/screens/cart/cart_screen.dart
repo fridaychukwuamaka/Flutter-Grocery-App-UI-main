@@ -155,7 +155,7 @@ class _CartScreenState extends State<CartScreen> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        "\$$cartValue",
+        "₦$cartValue",
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
     );

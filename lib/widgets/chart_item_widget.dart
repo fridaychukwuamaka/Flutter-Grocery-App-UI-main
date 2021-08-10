@@ -86,7 +86,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                 Container(
                   width: 70,
                   child: AppText(
-                    text: "\$${getPrice().toStringAsFixed(2)}",
+                    text: "₦${getPrice().toStringAsFixed(2)}",
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     textAlign: TextAlign.right,
