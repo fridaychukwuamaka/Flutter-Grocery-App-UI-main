@@ -79,7 +79,7 @@ class ExploreScreen extends StatelessWidget {
                 CategoryItem categoryItem = CategoryItem(
                   id: category.id,
                   name: category.get('name'),
-                  imagePath: 'assets/images/categories_images/fruit.png',
+                  imagePath: category.get('img'),
                 );
 
                 return GestureDetector(
@@ -93,10 +93,7 @@ class ExploreScreen extends StatelessWidget {
                 );
               }).toList(),
 
-              /*    //Here is the place that we are getting flexible/ dynamic card for various images
-              staggeredTiles: categoryItemsDemo
-                  .map<StaggeredTile>((_) => StaggeredTile.fit(2))
-                  .toList(), */
+      
               staggeredTiles: snapshot.data.docs
                   .map<StaggeredTile>((_) => StaggeredTile.fit(2))
                   .toList(),

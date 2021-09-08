@@ -72,8 +72,7 @@ class _CartScreenState extends State<CartScreen> {
                                       productId: val,
                                       item: GroceryItem(
                                         stock: item['numItem'],
-                                        imagePath:
-                                            'assets/images/grocery_images/banana.png',
+                                        imagePath: cartMap.data.get('img'),
                                         name: cartMap.data.get('name'),
                                         description: cartMap.data.get('desc'),
                                         price: cartMap.data
@@ -155,7 +154,7 @@ class _CartScreenState extends State<CartScreen> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        "₦$cartValue",
+        "NGN $cartValue",
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
     );

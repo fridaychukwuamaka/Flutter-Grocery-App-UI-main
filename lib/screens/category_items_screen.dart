@@ -38,7 +38,7 @@ class CategoryItemsScreen extends StatelessWidget {
           ),
         ),
         actions: [
-        /*   GestureDetector(
+          /*   GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
@@ -79,12 +79,12 @@ class CategoryItemsScreen extends StatelessWidget {
                 children: snapshot.data.docs.map((DocumentSnapshot item) {
                   // print(item.data());
                   GroceryItem groceryItem = GroceryItem(
-                      name: item.get('name'),
-                      stock: item.get('stock'),
-                      price: item.get('price').toDouble(),
-                      description: item.get('desc'),
-                      imagePath:
-                          'assets/images/beverages_images/coca_cola.png');
+                    name: item.get('name'),
+                    stock: item.get('stock'),
+                    price: item.get('price').toDouble(),
+                    description: item.get('desc'),
+                    imagePath: item.get('img'),
+                  );
                   return GestureDetector(
                     onTap: () {
                       onItemClicked(context, groceryItem, item.reference);

@@ -58,7 +58,7 @@ class GroceryItemCardWidget extends StatelessWidget {
             Row(
               children: [
                 AppText(
-                  text: "₦${item.price.toStringAsFixed(2)}",
+                  text: "NGN ${item.price.toStringAsFixed(2)}",
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -74,7 +74,7 @@ class GroceryItemCardWidget extends StatelessWidget {
 
   Widget imageWidget() {
     return Container(
-      child: Image.asset(item.imagePath),
+      child: Image.network(item.imagePath),
     );
   }
 
@@ -83,8 +83,9 @@ class GroceryItemCardWidget extends StatelessWidget {
       height: 45,
       width: 45,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(17),
-          color: AppColors.primaryColor),
+        borderRadius: BorderRadius.circular(17),
+        color: AppColors.primaryColor,
+      ),
       child: Center(
         child: Icon(
           Icons.add,

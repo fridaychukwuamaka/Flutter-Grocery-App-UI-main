@@ -13,7 +13,7 @@ import 'package:grocery_app/screens/cart/cart_screen.dart';
 import 'package:grocery_app/screens/order_accepted_screen.dart';
 import 'package:grocery_app/services/db.dart';
 
-import '../order_failed_dialog.dart';
+
 
 class CheckoutBottomSheet extends StatefulWidget {
   final double total;
@@ -77,7 +77,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
           getDivider(),
           // checkoutRow("Promo Code", trailingText: "Pick Discount"),
           // getDivider(),
-          checkoutRow("Total Cost", trailingText: "₦${widget.total}"),
+          checkoutRow("Total Cost", trailingText: "NGN ${widget.total}"),
           getDivider(),
           SizedBox(
             height: 30,

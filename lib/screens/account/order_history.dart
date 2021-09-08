@@ -61,7 +61,7 @@ class OrderHistory extends StatelessWidget {
 
                   return ListTile(
                     title: Text(
-                      'Order ₦{data[index].id}',
+                      'Order ${data[index].id}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                       ),

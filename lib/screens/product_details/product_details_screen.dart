@@ -2,9 +2,12 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/models/grocery_item.dart';
 import 'package:grocery_app/services/db.dart';
+import 'package:grocery_app/styles/colors.dart';
 import 'package:grocery_app/widgets/item_counter_widget.dart';
 
 import 'favourite_toggle_icon_widget.dart';
@@ -22,121 +25,163 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int amount = 1;
 
+  Future<void> incrementAmount() async {
+    DocumentSnapshot<Map<String, dynamic>> cart =
+        await db.collection('carts').doc(auth.currentUser.uid).get();
+    List products = cart.get('products');
+
+    int index = products
+        .indexWhere((element) => element['product'] == widget.productId);
+
+    var numItem = amount;
+
+    if (index != -1) {
+      numItem = products[index]['numItem'];
+      var maxItem =
+          await db.collection('products').doc(widget.productId.id).get();
+
+      if (numItem < maxItem.get('stock')) {
+        products[index]['numItem'] = numItem;
+
+        setState(() {
+          amount = numItem;
+        });
+      }
+    } else {
+      products.add(
+        {
+          'numItem': numItem,
+          'product': widget.productId,
+        },
+      );
+    }
+    db.collection('carts').doc(auth.currentUser.uid).update(
+      {'products': products},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 74,
+        child: Column(
+          children: [
+            AppButton(
+              label: "Add To Basket",
+              onPressed: () async {
+                await incrementAmount();
+                Get.snackbar(
+                  'Message',
+                  'Cart added!!',
+                  backgroundColor: AppColors.primaryColor,
+                  colorText: Colors.white,
+                  borderRadius: 0,
+                  margin: EdgeInsets.all(0),
+                );
+              },
+            ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
             getImageHeaderWidget(),
+            SizedBox(
+              height: 20,
+            ),
             Expanded(
-              child: Padding(
+              child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Column(
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        widget.groceryItem.name,
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: AppText(
-                        text: widget.groceryItem.description,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff7C7C7C),
-                      ),
-                      trailing: FavoriteToggleIcon(productId: widget.productId),
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      widget.groceryItem.name,
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    Spacer(),
-                    Row(
-                      children: [
-                        FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                            future: db
-                                .collection('carts')
-                                .doc(auth.currentUser.uid)
-                                .get(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData && snapshot.data.exists) {
-                                List products = [];
+                    subtitle: AppText(
+                      text: widget.groceryItem.description,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff7C7C7C),
+                    ),
+                    trailing: FavoriteToggleIcon(productId: widget.productId),
+                  ),
+                  //Spacer(),
+                  Row(
+                    children: [
+                      FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                          future: db
+                              .collection('carts')
+                              .doc(auth.currentUser.uid)
+                              .get(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data.exists) {
+                              List products = [];
 
-                                products = snapshot.data.get('products');
+                              products = snapshot.data.get('products');
 
-                                var cart = products.where(
-                                  (element) =>
-                                      element['product'].id ==
-                                      widget.productId.id,
-                                );
+                              var cart = products.where(
+                                (element) =>
+                                    element['product'].id ==
+                                    widget.productId.id,
+                              );
 
-                                if (cart.isNotEmpty) {
-                                  amount = cart.single['numItem'];
-                                }
-
-                                return ItemCounterWidget(
-                                  stock: amount,
-                                  productId: widget.productId,
-                                  onAmountChanged: (newAmount) {
-                                    setState(() {
-                                      amount = newAmount;
-                                    });
-                                  },
-                                );
-                              } else {
-                                return ItemCounterWidget(
-                                  stock: amount,
-                                  onAmountChanged: (newAmount) {
-                                    setState(() {
-                                      amount = newAmount;
-                                    });
-                                  },
-                                );
+                              if (cart.isNotEmpty) {
+                                amount = cart.single['numItem'];
                               }
-                            }),
-                        Spacer(),
-                        Text(
-                          "₦${getTotalPrice().toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                    Spacer(),
-                    Divider(thickness: 1),
-                    getProductDataRowWidget("Product Details"),
-                    Divider(thickness: 1),
-                    getProductDataRowWidget("Nutritions",
-                        customWidget: nutritionWidget()),
-                    Divider(thickness: 1),
-                    getProductDataRowWidget(
-                      "Review",
-                      customWidget: ratingWidget(),
-                    ),
-                    Spacer(),
-                   /*  AppButton(
-                      label: "Add To Cart",
-                      onPressed: () async {
-                        var addedCart =
-                            await StoreDb().addToCart(widget.productId, amount);
-                        if (addedCart) {
-                          Get.snackbar(
-                            'Message',
-                            'Added to cart',
-                            margin: EdgeInsets.zero,
-                            colorText: Colors.white,
-                            borderRadius: 0,
-                            backgroundColor: AppColors.primaryColor
-                          );
-                        } else {
-                          print('object');
-                        }
-                      },
-                    ),
-                     */Spacer(),
-                  ],
-                ),
+
+                              return ItemCounterWidget(
+                                stock: amount,
+                                productId: widget.productId,
+                                onAmountChanged: (newAmount) {
+                                  setState(() {
+                                    amount = newAmount;
+                                  });
+                                },
+                              );
+                            } else {
+                              return ItemCounterWidget(
+                                stock: amount,
+                                onAmountChanged: (newAmount) {
+                                  setState(() {
+                                    amount = newAmount;
+                                  });
+                                },
+                              );
+                            }
+                          }),
+                      Spacer(),
+                      Text(
+                        "NGN${getTotalPrice().toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Divider(thickness: 1),
+                  getProductDataRowWidget("Product Details"),
+                  Divider(thickness: 1),
+                  getProductDataRowWidget("Nutritions",
+                      customWidget: nutritionWidget()),
+                  Divider(thickness: 1),
+                  getProductDataRowWidget(
+                    "Review",
+                    customWidget: ratingWidget(),
+                  ),
+                ],
               ),
             ),
           ],
@@ -167,7 +212,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             tileMode: TileMode.clamp),
       ),
       child: Image(
-        image: AssetImage(widget.groceryItem.imagePath),
+        image: NetworkImage(widget.groceryItem.imagePath),
       ),
     );
   }

@@ -86,7 +86,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                 Container(
                   width: 70,
                   child: AppText(
-                    text: "₦${getPrice().toStringAsFixed(2)}",
+                    text: "NGN ${getPrice().toStringAsFixed(2)}",
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     textAlign: TextAlign.right,
@@ -104,7 +104,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   Widget imageWidget() {
     return Container(
       width: 100,
-      child: Image.asset(widget.item.imagePath),
+      child: Image.network(widget.item.imagePath),
     );
   }
 

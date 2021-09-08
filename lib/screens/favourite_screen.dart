@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/models/grocery_item.dart';
-import 'package:grocery_app/screens/filter_screen.dart';
 import 'package:grocery_app/screens/product_details/product_details_screen.dart';
 import 'package:grocery_app/services/db.dart';
 import 'package:grocery_app/widgets/grocery_item_card_widget.dart';
@@ -18,7 +17,7 @@ class FavouriteScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
-    /*     leading: GestureDetector(
+        /*     leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
@@ -47,7 +46,8 @@ class FavouriteScreen extends StatelessWidget {
             ),
           ),
         ],
-        */ title: Container(
+        */
+        title: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 25,
           ),
@@ -78,12 +78,12 @@ class FavouriteScreen extends StatelessWidget {
                       builder: (context, favourite) {
                         if (favourite.hasData) {
                           GroceryItem groceryItem = GroceryItem(
-                              name: favourite.data.get('name'),
-                              stock: favourite.data.get('stock'),
-                              price: favourite.data.get('price').toDouble(),
-                              description: favourite.data.get('desc'),
-                              imagePath:
-                                  'assets/images/beverages_images/coca_cola.png');
+                            name: favourite.data.get('name'),
+                            stock: favourite.data.get('stock'),
+                            price: favourite.data.get('price').toDouble(),
+                            description: favourite.data.get('desc'),
+                            imagePath: favourite.data.get('img'),
+                          );
                           return GestureDetector(
                             onTap: () {
                               onItemClicked(context, groceryItem, val);
